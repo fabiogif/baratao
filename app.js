@@ -2,7 +2,7 @@
   "use strict";
 
   const STORAGE_KEY = "cart_v1";
-  /** WhatsApp: (71) 99198-1871 — formato wa.me sem + */
+  /** Destino wa.me (DDI+DDD+número, sem +). Não exibir na UI. */
   const WA_NUMBER = "5571991981871";
 
   const money = new Intl.NumberFormat("pt-BR", {
@@ -376,6 +376,10 @@
     window.open(url, "_blank", "noopener,noreferrer");
   }
 
+  function openWhatsAppBlank() {
+    window.open("https://wa.me/" + WA_NUMBER, "_blank", "noopener,noreferrer");
+  }
+
   function clearCart() {
     cart = {};
     saveCart();
@@ -385,6 +389,11 @@
   function bindControls() {
     document.getElementById("btn-whatsapp")?.addEventListener("click", openWhatsApp);
     document.getElementById("btn-clear")?.addEventListener("click", clearCart);
+    document.querySelectorAll(".js-open-whatsapp").forEach(function (el) {
+      el.addEventListener("click", function () {
+        openWhatsAppBlank();
+      });
+    });
   }
 
   function start() {
