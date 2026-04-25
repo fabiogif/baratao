@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Eletro Express — Catálogo</title>
+  <link rel="stylesheet" href="styles.css"/>
+</head>
+<body>
+  <div class="top-trust" role="note">
+    <div class="top-trust__inner">
+      <span class="top-trust__pill">Catálogo atualizado</span>
+      <span class="top-trust__text">Pedido revisado pela equipe antes da confirmação · Preços e estoque sujeitos à disponibilidade no momento do contato</span>
+    </div>
+  </div>
+
+  <header class="site-header">
+    <div class="site-header__main">
+      <p class="site-header__eyebrow">Eletroportáteis · Bahia</p>
+      <h1 class="site-title">Eletro Express</h1>
+      <p class="site-subtitle">Selecione os produtos, envie o carrinho pelo WhatsApp e combine pagamento e entrega com atendimento humano — com <strong>preço atual</strong> sempre em destaque no catálogo.</p>
+    </div>
+    <aside class="site-header__aside" aria-label="Contato e garantias">
+      <div class="contact-card">
+        <span class="contact-card__label">WhatsApp comercial</span>
+        <a class="contact-card__phone" href="https://wa.me/5571991981871" rel="noopener noreferrer">(71) 99198-1871</a>
+        <span class="contact-card__hint">Segunda a sábado · resposta o quanto antes</span>
+      </div>
+      <ul class="trust-list">
+        <li class="trust-list__item">Sem pagamento automático neste site</li>
+        <li class="trust-list__item">“Preço na loja” é referência de varejo; “preço atual” é o valor combinado na venda</li>
+      </ul>
+    </aside>
+  </header>
+
+  <div class="layout">
+    <main>
+      <div id="product-grid" class="product-grid" aria-label="Catálogo de produtos"></div>
+    </main>
+
+    <aside class="cart-panel" aria-label="Carrinho de compras">
+      <div id="cartPanelInner" class="cart-panel__inner">
+        <h2 class="cart-title">Carrinho</h2>
+        <ul id="cart-items" class="cart-items"></ul>
+        <p id="cart-empty" class="cart-empty">Nenhum item ainda. Use &quot;Adicionar ao carrinho&quot; nos produtos.</p>
+        <div id="cart-footer" class="cart-footer hidden">
+          <div class="cart-total">
+            <span>Total (preço atual)</span>
+            <strong id="cart-total-value">R$&nbsp;0,00</strong>
+          </div>
+          <button type="button" id="btn-whatsapp" class="btn btn--whatsapp">
+            Confirmar pedido no WhatsApp
+          </button>
+          <button type="button" id="btn-clear" class="btn btn--ghost">
+            Limpar carrinho
+          </button>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <footer class="site-footer">
+    <div class="site-footer__grid">
+      <section class="site-footer__block" aria-labelledby="footer-precos">
+        <h2 id="footer-precos" class="site-footer__heading">Transparência nos preços</h2>
+        <p class="site-footer__text">Valores “na loja” indicam referência de mercado (ex.: Casas Bahia) para comparação. O <strong>preço atual</strong> é o valor praticado pela Eletro Express e pode variar conforme fornecedor, promoção ou cotação do dia.</p>
+      </section>
+      <section class="site-footer__block" aria-labelledby="footer-contato">
+        <h2 id="footer-contato" class="site-footer__heading">Fale conosco</h2>
+        <p class="site-footer__text">Dúvidas, disponibilidade ou fechamento do pedido:</p>
+        <p class="site-footer__cta"><a class="site-footer__link" href="https://wa.me/5571991981871" rel="noopener noreferrer">Abrir WhatsApp — (71) 99198-1871</a></p>
+      </section>
+      <section class="site-footer__block" aria-labelledby="footer-legal">
+        <h2 id="footer-legal" class="site-footer__heading">Aviso legal</h2>
+        <p class="site-footer__text">Imagens e marcas exibidas pertencem aos fabricantes e varejistas de referência. Este site é um catálogo de divulgação; não somos loja oficial das marcas citadas.</p>
+      </section>
+    </div>
+    <div class="site-footer__bar">
+      <p class="site-footer__copy">© 2026 EletroExpress · Catálogo informativo · Conteúdo sujeito a alteração sem aviso prévio.</p>
+    </div>
+  </footer>
+
+  <div id="cartToast" class="cart-toast" role="status" aria-live="polite" aria-atomic="true" hidden></div>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

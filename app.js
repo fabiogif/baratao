@@ -63,6 +63,7 @@
   }
 
   function setQty(id, qty) {
+    const prev = getQty(id);
     const n = Math.max(0, Math.floor(Number(qty) || 0));
     if (n === 0) {
       delete cart[id];
@@ -71,10 +72,64 @@
     }
     saveCart();
     renderAll();
+    if (n > prev) {
+      onCartQuantityIncreased(productById.get(id), n - prev);
+    }
   }
 
   function addOne(id) {
     setQty(id, getQty(id) + 1);
+  }
+
+  let toastHideTimer = 0;
+  let toastCleanupTimer = 0;
+  let pulseTimer = 0;
+
+  function pulseCartPanel() {
+    const el = document.getElementById("cartPanelInner");
+    if (!el) return;
+    el.classList.remove("cart-panel__inner--pulse");
+    void el.offsetWidth;
+    el.classList.add("cart-panel__inner--pulse");
+    clearTimeout(pulseTimer);
+    pulseTimer = setTimeout(function () {
+      el.classList.remove("cart-panel__inner--pulse");
+    }, 700);
+  }
+
+  function showCartToast(message) {
+    const toast = document.getElementById("cartToast");
+    if (!toast) return;
+    clearTimeout(toastHideTimer);
+    clearTimeout(toastCleanupTimer);
+    toast.hidden = false;
+    toast.textContent = message;
+    requestAnimationFrame(function () {
+      toast.classList.add("cart-toast--visible");
+    });
+    toastHideTimer = setTimeout(function () {
+      toast.classList.remove("cart-toast--visible");
+      toastCleanupTimer = setTimeout(function () {
+        toast.hidden = true;
+        toast.textContent = "";
+      }, 400);
+    }, 2600);
+  }
+
+  function scrollCartIntoViewIfNeeded() {
+    if (!window.matchMedia("(max-width: 899px)").matches) return;
+    const panel = document.querySelector(".cart-panel");
+    if (panel) {
+      panel.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }
+  }
+
+  function onCartQuantityIncreased(product, delta) {
+    pulseCartPanel();
+    scrollCartIntoViewIfNeeded();
+    const name = product && product.name ? product.name : "Produto";
+    const suffix = delta > 1 ? " (+" + delta + ")" : "";
+    showCartToast("Adicionado ao carrinho: " + name + suffix);
   }
 
   function cartLines() {
@@ -89,13 +144,14 @@
         storePrice: p.storePrice,
         unitFinal: p.finalPrice,
         subtotalLoja: p.storePrice * qty,
+        subtotalAtual: p.finalPrice * qty,
       });
     }
     return lines;
   }
 
   function cartTotal() {
-    return cartLines().reduce((s, l) => s + l.subtotalLoja, 0);
+    return cartLines().reduce((s, l) => s + l.subtotalAtual, 0);
   }
 
   function imgOnError(img) {
@@ -147,6 +203,13 @@
       const body = document.createElement("div");
       body.className = "card__body";
 
+      if (p.category) {
+        const cat = document.createElement("span");
+        cat.className = "card__category";
+        cat.textContent = p.category;
+        body.appendChild(cat);
+      }
+
       const title = document.createElement("h2");
       title.className = "card__title";
       title.textContent = p.name;
@@ -154,17 +217,9 @@
       const prices = document.createElement("div");
       prices.className = "card__prices";
 
-      const labStore = document.createElement("span");
-      labStore.className = "price-label";
-      labStore.textContent = "Valor da loja";
-
-      const store = document.createElement("span");
-      store.className = "price-store";
-      store.textContent = money.format(p.storePrice);
-
       const labFinal = document.createElement("span");
       labFinal.className = "price-label";
-      labFinal.textContent = "Valor atual";
+      labFinal.textContent = "Preço atual";
 
       const fin = document.createElement("span");
       fin.className = "price-final";
@@ -174,7 +229,19 @@
       finalBox.className = "price-final-highlight";
       finalBox.append(labFinal, fin);
 
-      prices.append(labStore, store, finalBox);
+      const refBlock = document.createElement("div");
+      refBlock.className = "price-ref-block";
+
+      const labStore = document.createElement("span");
+      labStore.className = "price-label";
+      labStore.textContent = "Preço na loja";
+
+      const store = document.createElement("span");
+      store.className = "price-store";
+      store.textContent = money.format(p.storePrice);
+
+      refBlock.append(labStore, store);
+      prices.append(finalBox, refBlock);
 
       const actions = document.createElement("div");
       actions.className = "card__actions";
@@ -221,10 +288,10 @@
       const meta = document.createElement("span");
       meta.className = "cart-item__meta";
       meta.textContent =
-        "Valor da loja: " +
-        money.format(line.storePrice) +
-        " · Valor atual: " +
-        money.format(line.unitFinal);
+        "Preço atual: " +
+        money.format(line.unitFinal) +
+        " · Preço na loja: " +
+        money.format(line.storePrice);
 
       const controls = document.createElement("div");
       controls.className = "cart-item__controls";
@@ -248,7 +315,10 @@
       const sub = document.createElement("span");
       sub.className = "cart-item__sub";
       sub.textContent =
-        "Subtotal (valor da loja): " + money.format(line.subtotalLoja);
+        "Subtotal (preço atual): " +
+        money.format(line.subtotalAtual) +
+        " · Ref. loja: " +
+        money.format(line.subtotalLoja);
 
       li.append(name, meta, controls, sub);
       list.appendChild(li);
@@ -271,26 +341,29 @@
     if (lines.length === 0) return "";
 
     const parts = [
-      "Olá! Pedido pelo catálogo:",
+      "Olá! Pedido pelo catálogo EletroExpress:",
       "",
       ...lines.map((l) => {
         const loja = money.format(l.storePrice);
         const atual = money.format(l.unitFinal);
-        const sub = money.format(l.subtotalLoja);
+        const subAtual = money.format(l.subtotalAtual);
+        const subLoja = money.format(l.subtotalLoja);
         return (
           l.name +
-          "\nValor da loja: " +
-          loja +
-          "\nValor atual: " +
+          "\nPreço atual (un.): " +
           atual +
+          "\nPreço na loja — ref. (un.): " +
+          loja +
           "\nQuantidade: " +
           l.qty +
-          "\nSubtotal (valor da loja): " +
-          sub
+          "\nSubtotal (preço atual): " +
+          subAtual +
+          "\nSubtotal ref. loja: " +
+          subLoja
         );
       }),
       "",
-      `Total (valor da loja): ${money.format(cartTotal())}`,
+      "Total (preço atual): " + money.format(cartTotal()),
     ];
     return parts.join("\n");
   }
@@ -325,4 +398,3 @@
     start();
   }
 })();
-
