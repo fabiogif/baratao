@@ -33,6 +33,25 @@
     </aside>
   </header>
 
+  <section class="top-banner" aria-label="Destaques do catálogo">
+    <div class="top-banner__inner" id="topBannerCarousel">
+      <div class="top-banner__track">
+        <div class="top-banner__slide is-active">
+          <img src="imagem/banner-1.png" alt="Destaque promocional 1" loading="eager" decoding="async"/>
+        </div>
+        <div class="top-banner__slide">
+          <img src="imagem/banner-2.png" alt="Destaque promocional 2" loading="lazy" decoding="async"/>
+        </div>
+      </div>
+      <button type="button" class="top-banner__nav top-banner__nav--prev" aria-label="Banner anterior">‹</button>
+      <button type="button" class="top-banner__nav top-banner__nav--next" aria-label="Próximo banner">›</button>
+      <div class="top-banner__dots" role="tablist" aria-label="Seleção de banner">
+        <button type="button" class="top-banner__dot is-active" data-banner-index="0" aria-label="Ir para banner 1" aria-selected="true"></button>
+        <button type="button" class="top-banner__dot" data-banner-index="1" aria-label="Ir para banner 2" aria-selected="false"></button>
+      </div>
+    </div>
+  </section>
+
   <div class="layout">
     <main>
       <div id="product-grid" class="product-grid" aria-label="Catálogo de produtos"></div>

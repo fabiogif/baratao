@@ -132,6 +132,60 @@
     showCartToast("Adicionado ao carrinho: " + name + suffix);
   }
 
+  function initTopBannerCarousel() {
+    const root = document.getElementById("topBannerCarousel");
+    if (!root) return;
+    const slides = Array.from(root.querySelectorAll(".top-banner__slide"));
+    const dots = Array.from(root.querySelectorAll(".top-banner__dot"));
+    if (slides.length <= 1 || dots.length !== slides.length) return;
+
+    let index = 0;
+    let timer = 0;
+
+    function show(nextIndex) {
+      index = (nextIndex + slides.length) % slides.length;
+      slides.forEach(function (slide, i) {
+        slide.classList.toggle("is-active", i === index);
+      });
+      dots.forEach(function (dot, i) {
+        const active = i === index;
+        dot.classList.toggle("is-active", active);
+        dot.setAttribute("aria-selected", active ? "true" : "false");
+      });
+    }
+
+    function next() {
+      show(index + 1);
+    }
+
+    function restart() {
+      clearInterval(timer);
+      timer = setInterval(next, 4500);
+    }
+
+    root.querySelector(".top-banner__nav--prev")?.addEventListener("click", function () {
+      show(index - 1);
+      restart();
+    });
+    root.querySelector(".top-banner__nav--next")?.addEventListener("click", function () {
+      show(index + 1);
+      restart();
+    });
+
+    dots.forEach(function (dot) {
+      dot.addEventListener("click", function () {
+        const value = Number(dot.getAttribute("data-banner-index"));
+        if (Number.isFinite(value)) {
+          show(value);
+          restart();
+        }
+      });
+    });
+
+    show(0);
+    restart();
+  }
+
   function cartLines() {
     const lines = [];
     for (const [id, qty] of Object.entries(cart)) {
@@ -398,6 +452,7 @@
 
   function start() {
     bindControls();
+    initTopBannerCarousel();
     init();
   }
 
