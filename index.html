@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Catálogo — pequenos eletros</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <h1 class="site-title">Catálogo</h1>
+    <p class="site-subtitle">Valor da loja e valor atual. Envie o pedido pelo WhatsApp.</p>
+  </header>
+
+  <main class="layout">
+    <section class="catalog" aria-label="Lista de produtos">
+      <div id="product-grid" class="product-grid"></div>
+    </section>
+
+    <aside class="cart-panel" aria-label="Carrinho">
+      <div class="cart-panel__inner">
+        <h2 class="cart-title">Carrinho</h2>
+        <ul id="cart-items" class="cart-items"></ul>
+        <p id="cart-empty" class="cart-empty">Nenhum item ainda.</p>
+        <div id="cart-footer" class="cart-footer hidden">
+          <p class="cart-total"><span>Total (valor da loja)</span> <strong id="cart-total-value">R$&nbsp;0,00</strong></p>
+          <button type="button" id="btn-whatsapp" class="btn btn--whatsapp">
+            Enviar pedido no WhatsApp
+          </button>
+          <button type="button" id="btn-clear" class="btn btn--ghost">Limpar carrinho</button>
+        </div>
+      </div>
+    </aside>
+  </main>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
