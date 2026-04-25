@@ -2,6 +2,7 @@
   "use strict";
 
   const STORAGE_KEY = "cart_v1";
+  /** WhatsApp: (71) 99198-1871 — formato wa.me sem + */
   const WA_NUMBER = "5571991981871";
 
   const money = new Intl.NumberFormat("pt-BR", {
